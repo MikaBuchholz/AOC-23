@@ -4,7 +4,6 @@ mod aoc_1;
 mod util;
 
 fn main() -> std::io::Result<()> {
-    aoc_1();
-
+    assert!(aoc_1()? == 54019);
     Ok(())
 }

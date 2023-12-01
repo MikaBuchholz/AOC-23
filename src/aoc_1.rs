@@ -1,7 +1,6 @@
 use crate::util::read_input;
-use regex::bytes::Regex;
 
-const valid: &[&str] = &[
+const NUMS_SPELLED: &[&str] = &[
     "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
 ];
 
@@ -12,7 +11,7 @@ trait StringUtil {
 
 impl StringUtil for String {
     fn is_spelled(&self) -> bool {
-        valid.contains(&self.as_str())
+        NUMS_SPELLED.contains(&self.as_str())
     }
 
     fn from_spelled(self) -> i32 {
@@ -31,7 +30,7 @@ impl StringUtil for String {
     }
 }
 
-pub fn aoc_1() -> std::io::Result<()> {
+pub fn aoc_1() -> std::io::Result<i32> {
     let input = read_input("input.txt")?;
     let lines: Vec<String> = input.lines().map(|x| x.to_string()).collect();
 
@@ -46,7 +45,7 @@ pub fn aoc_1() -> std::io::Result<()> {
 
         let mut pats = vec![];
 
-        for pat in valid {
+        for pat in NUMS_SPELLED {
             let matches = line.match_indices(pat).collect::<Vec<_>>();
 
             if matches.is_empty() {
@@ -56,18 +55,15 @@ pub fn aoc_1() -> std::io::Result<()> {
             pats.push(matches);
         }
 
-        //println!("{pats:?}");
-
         for matches in pats {
-            let (start, str) = matches[0];
-            let end = start + str.len();
+            for (start, str) in matches {
+                let end = start + str.len();
 
-            let num = str.to_string().from_spelled();
+                let num = str.to_string().from_spelled();
 
-            spelled_out_reserved[start..end].copy_from_slice(&vec![num; str.len()])
+                spelled_out_reserved[start..end].copy_from_slice(&vec![num; str.len()])
+            }
         }
-
-        println!("{:?}", spelled_out_reserved);
 
         for index in 0..len {
             if spelled_out_reserved[index] != 0 {
@@ -95,14 +91,11 @@ pub fn aoc_1() -> std::io::Result<()> {
             }
         }
 
-        //println!("{helper}: {out} {:?}", spelled_out_reserved);
         if out.is_empty() {
             continue;
         }
         sum += out.parse::<i32>().unwrap();
     }
 
-    println!("{sum}");
-
-    Ok(())
+    Ok(sum)
 }
