@@ -1,7 +1,4 @@
-use std::{
-    fs::File,
-    io::{Read, Write},
-};
+use std::{fs::File, io::Read};
 
 pub fn read_input(path: &str) -> std::io::Result<String> {
     let mut buf = String::new();
